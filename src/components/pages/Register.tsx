@@ -10,10 +10,11 @@ import {
 } from "@mantine/core";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   return (
     <Container size={420} my={40}>
       <Title
+        order={1}
         align="center"
         sx={(theme) => ({
           fontFamily: `Greycliff CF, ${theme.fontFamily}`,
@@ -23,10 +24,16 @@ const Login = () => {
         🧜🏻‍♀️ Welcome to Productivity App! 🌊
       </Title>
       <Title align="center" order={4} mt="md">
-        Login your Account
+        Register to App
       </Title>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Email" placeholder="you@mantine.dev" required />
+        <TextInput label="Name" placeholder="Your Name" required />
+        <TextInput
+          label="Email"
+          placeholder="you@mantine.dev"
+          required
+          mt="md"
+        />
         <PasswordInput
           label="Password"
           placeholder="Your password"
@@ -34,14 +41,14 @@ const Login = () => {
           mt="md"
         />
         <Button fullWidth mt="xl">
-          Sign in
+          Register
         </Button>
       </Paper>
       <Text color="dimmed" size="sm" align="center" mt="xl">
-        Do not have an account yet?{" "}
-        <Link to="/register">
+        Do you have already an account?{" "}
+        <Link to="/login">
           <Anchor size="sm" component="button">
-            Create account
+            Login
           </Anchor>
         </Link>
       </Text>
@@ -49,4 +56,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
