@@ -1,11 +1,11 @@
 import { MantineProvider } from "@mantine/core";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./components/pages/Login";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Home from "./components/pages/Home";
+import Login from "./components/pages/Login";
 import Register from "./components/pages/Register";
 
 function App() {
-  const userAuth = false;
+  const userAuth = true;
 
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
