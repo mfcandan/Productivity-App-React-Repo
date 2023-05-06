@@ -7,7 +7,7 @@ export function HeaderNav() {
   const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
-    <Header height={60} mb={120}>
+    <Header height={60} mb="xl">
       <Container className={classes.header}>
         {!isMobile && <UserSpecCard username="Fatih" />}
         <Title

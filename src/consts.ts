@@ -1,0 +1,1 @@
+export const placeHolderImage = "https://via.placeholder.com/150";
