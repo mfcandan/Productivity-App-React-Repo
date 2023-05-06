@@ -1,17 +1,23 @@
 import { Flex } from "@mantine/core";
 import TodoItem from "../molecules/TodoItem";
-
-const mockdata = [
-  { task: "Sun and sea", tag: "sports", image: "", checked: true },
-  { task: "Sightseeing", tag: "school", image: "", checked: false },
-  { task: "Mountains", tag: "school", image: "", checked: false },
-  { task: "Snow", tag: "home", image: "", checked: false },
-];
+import useTodoStore, { ITodoItem } from "../../store/store";
+import { useEffect, useState } from "react";
 
 export function TodoList() {
-  const items = mockdata.map((item, i) => (
-    <TodoItem item={item} index={i} key={item.task} />
+  const { todos, searchText } = useTodoStore((state) => state);
+  const [filteredTodos, setFilteredTodos] = useState<ITodoItem[]>(todos);
+
+  useEffect(() => {
+    const tempFilteredTodos = todos.filter((item: ITodoItem) => {
+      return item.task.toLowerCase().includes(searchText.toLowerCase());
+    });
+    setFilteredTodos(tempFilteredTodos);
+  }, [searchText, todos]);
+
+  const items = filteredTodos.map((item: ITodoItem, i: number) => (
+    <TodoItem item={item as ITodoItem} index={i} key={item.task} />
   ));
+
   return (
     <Flex direction="column" gap="md">
       {items}

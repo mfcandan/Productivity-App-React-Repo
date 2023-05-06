@@ -3,18 +3,9 @@ import { ImageCheckbox } from "./ImageCheckbox";
 import { IconDownload, IconEdit, IconTrash } from "@tabler/icons-react";
 import EditTaskModal from "./EditTaskModal";
 import { useDisclosure } from "@mantine/hooks";
+import { ITodoItem } from "../../store/store";
 
-interface ITodoItem {
-  item: {
-    task: string;
-    tag: string;
-    checked: boolean;
-    image?: string;
-  };
-  index: number;
-}
-
-const TodoItem = ({ item, index }: ITodoItem) => {
+const TodoItem = ({ item, index }: { item: ITodoItem; index: number }) => {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (

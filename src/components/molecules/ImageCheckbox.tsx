@@ -8,14 +8,15 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
-import { useUncontrolled } from "@mantine/hooks";
 import { placeHolderImage } from "../../consts";
+import useTodoStore from "../../store/store";
 
 interface ImageCheckboxProps {
   defaultChecked?: boolean;
   onChange?(checked: boolean): void;
   index: number;
   item: {
+    id: number;
     task: string;
     tag: string;
     checked: boolean;
@@ -28,22 +29,17 @@ export function ImageCheckbox({
   onChange,
   className,
   index,
-  item: { task, tag, checked, image },
+  item: { id, task, tag, checked, image },
   ...others
 }: ImageCheckboxProps &
   Omit<React.ComponentPropsWithoutRef<"button">, keyof ImageCheckboxProps>) {
-  const [value, handleChange] = useUncontrolled({
-    value: checked,
-    defaultValue: defaultChecked,
-    finalValue: false,
-    onChange,
-  });
-  const { classes, cx } = useStyles({ checked: value });
+  const { classes, cx } = useStyles({ checked });
+  const { toggleTodo } = useTodoStore((state) => state);
 
   return (
     <UnstyledButton
       {...others}
-      onClick={() => handleChange(!value)}
+      onClick={() => toggleTodo(id)}
       className={cx(classes.button, className)}
     >
       <Text mr="xs">{index + 1 + "."}</Text>
@@ -66,7 +62,7 @@ export function ImageCheckbox({
       </div>
 
       <Checkbox
-        checked={value}
+        checked={checked}
         onChange={() => {}}
         tabIndex={-1}
         styles={{ input: { cursor: "pointer" } }}
