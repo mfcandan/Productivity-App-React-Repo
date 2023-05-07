@@ -16,7 +16,11 @@ const AddTodoInputs = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { addTodo, tags } = useTodoStore((state) => state);
   const [newImage, setNewImage] = useState<File | null>(null);
-  const [newTodo, setNewTodo] = useState<any>();
+  const [newTodo, setNewTodo] = useState<any>({
+    task: "",
+    tag: "all",
+    image: "",
+  });
 
   useEffect(() => {
     newImage && handleImageUpload();
@@ -34,13 +38,14 @@ const AddTodoInputs = () => {
   };
 
   const handleAddTodo = () => {
-    addTodo({
-      ...newTodo,
-      id: Math.floor(Math.random() * 1000),
-    });
+    newTodo.task &&
+      newTodo.tag &&
+      addTodo({
+        ...newTodo,
+      });
     setNewTodo({
       task: "",
-      tag: "",
+      tag: "all",
       image: "",
     });
     setNewImage(null);
@@ -73,6 +78,7 @@ const AddTodoInputs = () => {
         <Select
           placeholder="Tags"
           size="sm"
+          defaultValue={"all"}
           value={newTodo?.tag}
           onChange={(e) =>
             setNewTodo({
