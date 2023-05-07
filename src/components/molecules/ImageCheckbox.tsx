@@ -19,7 +19,7 @@ interface ImageCheckboxProps {
     _id: string;
     task: string;
     tag: string;
-    checked: boolean;
+    completed: boolean;
     image?: string;
   };
 }
@@ -29,11 +29,11 @@ export function ImageCheckbox({
   onChange,
   className,
   index,
-  item: { _id, task, tag, checked, image },
+  item: { _id, task, tag, completed, image },
   ...others
 }: ImageCheckboxProps &
   Omit<React.ComponentPropsWithoutRef<"button">, keyof ImageCheckboxProps>) {
-  const { classes, cx } = useStyles({ checked });
+  const { classes, cx } = useStyles({ checked: completed });
   const { toggleTodo } = useTodoStore((state) => state);
 
   return (
@@ -63,7 +63,7 @@ export function ImageCheckbox({
       </div>
 
       <Checkbox
-        checked={checked}
+        checked={completed}
         onChange={() => {}}
         tabIndex={-1}
         styles={{ input: { cursor: "pointer" } }}

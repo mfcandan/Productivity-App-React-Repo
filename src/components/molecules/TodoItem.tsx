@@ -31,7 +31,7 @@ const TodoItem = ({ item, index }: { item: ITodoItem; index: number }) => {
             size="xs"
             color="red"
             variant="outline"
-            onClick={() => deleteTodo(item._id)}
+            onClick={() => item._id && deleteTodo(item._id)}
           >
             <IconTrash width={14} />
           </Button>

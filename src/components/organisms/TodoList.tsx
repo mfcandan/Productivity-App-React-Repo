@@ -13,7 +13,7 @@ export function TodoList() {
   }, []);
 
   useEffect(() => {
-    console.log(todos);
+    setFilteredTodos(todos);
   }, [todos]);
 
   useEffect(() => {

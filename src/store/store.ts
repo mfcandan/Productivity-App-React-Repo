@@ -10,7 +10,7 @@ export interface ITodoItem {
   userId: string;
   task: string;
   tag: string;
-  checked: boolean;
+  completed: boolean;
   image?: string;
 }
 
@@ -66,20 +66,17 @@ const useTodoStore = create<State>((set) => ({
       }
     });
     set(() => ({ tags: tempTags }));
-    console.log(tempTags);
   },
   addTodo: async (todo: ITodoItem) => {
     try {
-      const res = await axios.post("http://localhost:8000/todo", todo, {
+      await axios.post("http://localhost:8000/todo", todo, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
 
-      if (res && res.data) {
-        set((state) => ({ todos: [...state.todos, todo] }));
-      }
+      useTodoStore.getState().getTodos();
     } catch (error) {
       console.error(error);
       throw new Error(`Failed to add todo: ${error}`);
@@ -132,15 +129,17 @@ const useTodoStore = create<State>((set) => ({
       throw new Error(`Failed to update todo: ${error}`);
     }
   },
-  toggleTodo: (todoID: string) =>
-    set((state) => ({
-      todos: state.todos.map((todo) => {
-        if (todo._id === todoID) {
-          return { ...todo, checked: !todo.checked };
-        }
-        return todo;
-      }),
-    })),
+  toggleTodo: (todoID: string) => {
+    useTodoStore.getState().todos.map((todo) => {
+      if (todo._id === todoID) {
+        useTodoStore.getState().updateTodo(todoID, {
+          ...todo,
+          completed: !todo.completed,
+        });
+      }
+      return todo;
+    });
+  },
   setSelectedTag: (tag: string) => set(() => ({ selectedTag: tag })),
   createTag: (tag: string) =>
     set((state) => ({

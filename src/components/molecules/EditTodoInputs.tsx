@@ -17,7 +17,7 @@ interface IAddTodoInputs {
     _id: string;
     task: string;
     tag: string;
-    checked: boolean;
+    completed: boolean;
     image?: string;
   };
   onClose(): void;
