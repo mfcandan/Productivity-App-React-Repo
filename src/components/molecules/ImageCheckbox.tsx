@@ -48,6 +48,7 @@ export function ImageCheckbox({
           src={image ? image : placeHolderImage}
           alt={task}
           width={60}
+          height={60}
           radius="xl"
           onClick={() => alert("Download")}
         />

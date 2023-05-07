@@ -5,6 +5,7 @@ interface IEditTaskModal {
   isOpen: boolean;
   onClose(): void;
   item: {
+    id: number;
     task: string;
     tag: string;
     checked: boolean;
@@ -13,15 +14,16 @@ interface IEditTaskModal {
 }
 
 const EditTaskModal = ({ isOpen, onClose, item }: IEditTaskModal) => {
-  const handleEdit = () => {
-    console.log("edit");
-    onClose()
-  };
-
   return (
-    <Modal size="lg" opened={isOpen} onClose={onClose} title="Edit Task" centered>
-      <Flex>
-        <EditTodoInputs item={item} handleEdit={handleEdit} />
+    <Modal
+      size="lg"
+      opened={isOpen}
+      onClose={onClose}
+      title="Edit Task"
+      centered
+    >
+      <Flex pb={150}>
+        <EditTodoInputs item={item} onClose={onClose} />
       </Flex>
     </Modal>
   );

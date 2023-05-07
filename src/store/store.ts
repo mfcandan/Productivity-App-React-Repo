@@ -17,6 +17,8 @@ type State = {
   user: User | null;
   searchText: string;
   addTodo: (todo: ITodoItem) => void;
+  deleteTodo: (todoID: number) => void;
+  updateTodo: (todoID: number, updatedTodo: ITodoItem) => void;
   toggleTodo: (todoID: number) => void;
   setUser: (user: User) => void;
   logout: () => void;
@@ -27,7 +29,6 @@ const useTodoStore = create<State>((set) => ({
   todos: [
     { id: 1, task: "Sun and sea", tag: "sports", image: "", checked: false },
     { id: 2, task: "Sightseeing", tag: "school", image: "", checked: false },
-    { id: 3, task: "Mountains", tag: "school", image: "", checked: false },
     { id: 4, task: "Snow", tag: "home", image: "", checked: false },
   ],
   user: null,
@@ -35,6 +36,19 @@ const useTodoStore = create<State>((set) => ({
   addTodo: (todo: ITodoItem) =>
     set((state) => ({
       todos: [...state.todos, { ...todo, checked: false }],
+    })),
+  deleteTodo: (todoID: number) =>
+    set((state) => ({
+      todos: state.todos.filter((todo) => todo.id !== todoID),
+    })),
+  updateTodo: (todoID, updatedTodo) =>
+    set((state) => ({
+      todos: state.todos.map((todo) => {
+        if (todo.id === todoID) {
+          return { ...todo, ...updatedTodo };
+        }
+        return todo;
+      }),
     })),
   toggleTodo: (todoID: number) =>
     set((state) => ({
