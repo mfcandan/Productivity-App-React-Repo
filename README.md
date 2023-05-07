@@ -29,4 +29,3 @@ password: 123456
 
 ### `Screen shot:`
 ![Screenshot](/screenshots/1.png)
-![Screenshot](/screenshots/2.png)
