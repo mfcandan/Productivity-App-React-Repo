@@ -47,9 +47,9 @@ const AddTodoInputs = () => {
   };
 
   return (
-    <Flex direction="column" gap="md">
-      <Title order={3} align="center">
-        New Todo:
+    <Flex direction="column" gap="md" mt="xl">
+      <Title order={5} align="center">
+        Add New Todo:
       </Title>
       <Flex justify="space-between" gap="xs">
         <FileInput

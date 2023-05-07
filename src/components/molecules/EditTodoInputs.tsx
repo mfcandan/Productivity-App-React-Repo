@@ -14,7 +14,7 @@ import useTodoStore from "../../store/store";
 
 interface IAddTodoInputs {
   item?: {
-    id: number;
+    _id: string;
     task: string;
     tag: string;
     checked: boolean;
@@ -45,7 +45,7 @@ const EditTodoInputs = ({ item, onClose }: IAddTodoInputs) => {
   };
 
   const handleSave = () => {
-    item && newTodo && updateTodo(item.id, newTodo);
+    item && newTodo && updateTodo(item._id, newTodo);
     setNewTodo({
       task: "",
       tag: "",

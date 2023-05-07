@@ -18,7 +18,7 @@ const NewTagModal = ({ isOpen, onClose }: INewTagModal) => {
   };
 
   return (
-    <Modal opened={isOpen} onClose={onClose} title="Edit Task" centered>
+    <Modal opened={isOpen} onClose={onClose} title="Create New Tag" centered>
       <Flex p="xl" gap="sm">
         <TextInput
           value={newTag}

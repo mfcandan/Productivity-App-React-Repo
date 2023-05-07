@@ -8,9 +8,42 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useTodoStore from "../../store/store";
 
 const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setUser, user } = useTodoStore((state) => state);
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const getRegister = async () => {
+    try {
+      const response = await axios.post("http://localhost:8000/auth/register", {
+        name,
+        email,
+        password,
+      });
+
+      if (response.data.access_token) {
+        const data = response.data;
+        localStorage.setItem("access_token", data.access_token);
+        setUser(data);
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to fetch access token: ${error}`);
+    }
+  };
+
   return (
     <Container size={420} my={40}>
       <Title
@@ -27,20 +60,30 @@ const Register = () => {
         Register to App
       </Title>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Name" placeholder="Your Name" required />
         <TextInput
+          value={name}
+          onChange={(event) => setName(event.currentTarget.value)}
+          label="Name"
+          placeholder="Your Name"
+          required
+        />
+        <TextInput
+          value={email}
+          onChange={(event) => setEmail(event.currentTarget.value)}
           label="Email"
-          placeholder="you@mantine.dev"
+          placeholder="you@mail.com"
           required
           mt="md"
         />
         <PasswordInput
+          value={password}
+          onChange={(event) => setPassword(event.currentTarget.value)}
           label="Password"
           placeholder="Your password"
           required
           mt="md"
         />
-        <Button fullWidth mt="xl">
+        <Button fullWidth mt="xl" onClick={getRegister}>
           Register
         </Button>
       </Paper>

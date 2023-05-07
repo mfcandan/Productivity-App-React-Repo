@@ -4,10 +4,17 @@ import useTodoStore, { ITodoItem } from "../../store/store";
 import { useEffect, useState } from "react";
 
 export function TodoList() {
-  const { todos, tags, searchText, selectedTag, setSelectedTag } = useTodoStore(
-    (state) => state
-  );
+  const { todos, getTodos, tags, searchText, selectedTag, setSelectedTag } =
+    useTodoStore((state) => state);
   const [filteredTodos, setFilteredTodos] = useState<ITodoItem[]>(todos);
+
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  useEffect(() => {
+    console.log(todos);
+  }, [todos]);
 
   useEffect(() => {
     setFilteredTodos(todos);

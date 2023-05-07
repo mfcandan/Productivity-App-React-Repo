@@ -7,7 +7,7 @@ interface UserSpecCardProps {
 const UserSpecCard = ({ username }: UserSpecCardProps) => {
   return (
     <Text size="sm" align="center">
-      Welcome, {username}
+      Welcome{username}
     </Text>
   );
 };

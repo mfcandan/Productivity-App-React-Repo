@@ -1,3 +1,4 @@
+import axios from "axios";
 import create from "zustand";
 
 type User = {
@@ -5,7 +6,8 @@ type User = {
 };
 
 export interface ITodoItem {
-  id: number;
+  _id: string;
+  userId: string;
   task: string;
   tag: string;
   checked: boolean;
@@ -18,48 +20,122 @@ type State = {
   selectedTag?: string;
   user: User | null;
   searchText: string;
+  getTodos: () => Promise<ITodoItem[]>;
+  getTags: () => void;
   addTodo: (todo: ITodoItem) => void;
-  deleteTodo: (todoID: number) => void;
-  updateTodo: (todoID: number, updatedTodo: ITodoItem) => void;
-  toggleTodo: (todoID: number) => void;
+  deleteTodo: (todoID: string) => void;
+  updateTodo: (todoID: string, updatedTodo: ITodoItem) => void;
+  toggleTodo: (todoID: string) => void;
   setSelectedTag: (tag: string) => void;
   createTag: (tag: string) => void;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
   logout: () => void;
   setSearchText: (searchText: string) => void;
 };
 
 const useTodoStore = create<State>((set) => ({
-  todos: [
-    { id: 1, task: "Sun and sea", tag: "sports", image: "", checked: false },
-    { id: 2, task: "Sightseeing", tag: "school", image: "", checked: false },
-    { id: 4, task: "Snow", tag: "home", image: "", checked: false },
-  ],
-  tags: ["all", "sports", "school", "home"],
+  todos: [],
+  tags: ["all"],
   selectedTag: "all",
   user: null,
   searchText: "",
-  addTodo: (todo: ITodoItem) =>
-    set((state) => ({
-      todos: [...state.todos, { ...todo, checked: false }],
-    })),
-  deleteTodo: (todoID: number) =>
-    set((state) => ({
-      todos: state.todos.filter((todo) => todo.id !== todoID),
-    })),
-  updateTodo: (todoID, updatedTodo) =>
-    set((state) => ({
-      todos: state.todos.map((todo) => {
-        if (todo.id === todoID) {
-          return { ...todo, ...updatedTodo };
+  getTodos: async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/todo", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      const data = response.data;
+      set(() => ({ todos: data }));
+      data && useTodoStore.getState().getTags();
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to fetch todos: ${error}`);
+    }
+  },
+  getTags: () => {
+    let tempTags: string[] = ["all"];
+    useTodoStore.getState().todos.forEach((todo) => {
+      if (!tempTags.includes(todo.tag)) {
+        tempTags.push(todo.tag);
+      }
+    });
+    set(() => ({ tags: tempTags }));
+    console.log(tempTags);
+  },
+  addTodo: async (todo: ITodoItem) => {
+    try {
+      const res = await axios.post("http://localhost:8000/todo", todo, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      if (res && res.data) {
+        set((state) => ({ todos: [...state.todos, todo] }));
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to add todo: ${error}`);
+    }
+  },
+  deleteTodo: async (todoID: string) => {
+    try {
+      const res = await axios.delete(`http://localhost:8000/todo/${todoID}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      if (res.status === 200) {
+        set((state) => ({
+          todos: state.todos.filter((todo) => todo._id !== todoID),
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to delete todo: ${error}`);
+    }
+  },
+  updateTodo: async (todoID: string, updatedTodo) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:8000/todo/${todoID}`,
+        updatedTodo,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
         }
-        return todo;
-      }),
-    })),
-  toggleTodo: (todoID: number) =>
+      );
+
+      if (res && res.data) {
+        set((state) => ({
+          todos: state.todos.map((todo) => {
+            if (todo._id === todoID) {
+              return { ...todo, ...updatedTodo };
+            }
+            return todo;
+          }),
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to update todo: ${error}`);
+    }
+  },
+  toggleTodo: (todoID: string) =>
     set((state) => ({
       todos: state.todos.map((todo) => {
-        if (todo.id === todoID) {
+        if (todo._id === todoID) {
           return { ...todo, checked: !todo.checked };
         }
         return todo;
@@ -70,9 +146,18 @@ const useTodoStore = create<State>((set) => ({
     set((state) => ({
       tags: [...state.tags, tag],
     })),
-  setUser: (user: User) => set(() => ({ user })),
+  setUser: (user: User | null) => set(() => ({ user })),
   setSearchText: (searchText: string) => set(() => ({ searchText })),
-  logout: () => set(() => ({ user: null })),
+  logout: () => {
+    set(() => ({
+      user: null,
+      todos: [],
+      tags: ["all"],
+      searchText: "",
+      selectedTag: "all",
+    }));
+    localStorage.removeItem("access_token");
+  },
 }));
 
 export default useTodoStore;

@@ -16,7 +16,7 @@ interface ImageCheckboxProps {
   onChange?(checked: boolean): void;
   index: number;
   item: {
-    id: number;
+    _id: string;
     task: string;
     tag: string;
     checked: boolean;
@@ -29,7 +29,7 @@ export function ImageCheckbox({
   onChange,
   className,
   index,
-  item: { id, task, tag, checked, image },
+  item: { _id, task, tag, checked, image },
   ...others
 }: ImageCheckboxProps &
   Omit<React.ComponentPropsWithoutRef<"button">, keyof ImageCheckboxProps>) {
@@ -39,7 +39,7 @@ export function ImageCheckbox({
   return (
     <UnstyledButton
       {...others}
-      onClick={() => toggleTodo(id)}
+      onClick={() => toggleTodo(_id)}
       className={cx(classes.button, className)}
     >
       <Text mr="xs">{index + 1 + "."}</Text>

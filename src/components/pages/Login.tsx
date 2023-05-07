@@ -8,9 +8,41 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useTodoStore from "../../store/store";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setUser, user } = useTodoStore((state) => state);
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const getLogin = async () => {
+    try {
+      const response = await axios.post("http://localhost:8000/auth/login", {
+        email,
+        password,
+      });
+
+      const data = response.data;
+      data.user.access_token &&
+        localStorage.setItem("access_token", data.user.access_token);
+      setUser(data.user);
+      navigate("/home");
+
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to fetch access token: ${error}`);
+    }
+  };
+
   return (
     <Container size={420} my={40}>
       <Title
@@ -26,14 +58,22 @@ const Login = () => {
         Login your Account
       </Title>
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-        <TextInput label="Email" placeholder="you@mantine.dev" required />
+        <TextInput
+          value={email}
+          onChange={(e) => setEmail(e.currentTarget.value)}
+          label="Email"
+          placeholder="you@mail.com"
+          required
+        />
         <PasswordInput
+          value={password}
+          onChange={(e) => setPassword(e.currentTarget.value)}
           label="Password"
           placeholder="Your password"
           required
           mt="md"
         />
-        <Button fullWidth mt="xl">
+        <Button fullWidth mt="xl" onClick={() => getLogin()}>
           Sign in
         </Button>
       </Paper>

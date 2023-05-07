@@ -5,7 +5,7 @@ interface IEditTaskModal {
   isOpen: boolean;
   onClose(): void;
   item: {
-    id: number;
+    _id: string;
     task: string;
     tag: string;
     checked: boolean;
