@@ -14,7 +14,7 @@ import useTodoStore from "../../store/store";
 
 const AddTodoInputs = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const { addTodo } = useTodoStore((state) => state);
+  const { addTodo, tags } = useTodoStore((state) => state);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [newTodo, setNewTodo] = useState<any>();
 
@@ -80,11 +80,13 @@ const AddTodoInputs = () => {
               tag: e,
             })
           }
-          data={[
-            { value: "school", label: "School" },
-            { value: "home", label: "Home" },
-            { value: "sports", label: "Sports" },
-          ]}
+          data={
+            tags &&
+            tags.map((tag) => ({
+              value: tag,
+              label: tag,
+            }))
+          }
         />
         {!isMobile && (
           <Button color="green" size="sm" onClick={handleAddTodo}>

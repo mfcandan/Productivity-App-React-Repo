@@ -7,12 +7,10 @@ import {
   Title,
   rem,
 } from "@mantine/core";
-import ImageUploader from "../atoms/ImageUploader";
-import TagSelect from "../atoms/TagSelect";
 import { useMediaQuery } from "@mantine/hooks";
-import useTodoStore from "../../store/store";
-import { useEffect, useState } from "react";
 import { IconUpload } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import useTodoStore from "../../store/store";
 
 interface IAddTodoInputs {
   item?: {
@@ -27,7 +25,7 @@ interface IAddTodoInputs {
 
 const EditTodoInputs = ({ item, onClose }: IAddTodoInputs) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const { updateTodo } = useTodoStore((state) => state);
+  const { updateTodo, tags } = useTodoStore((state) => state);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [newTodo, setNewTodo] = useState<any>();
 
@@ -95,11 +93,13 @@ const EditTodoInputs = ({ item, onClose }: IAddTodoInputs) => {
               tag: e,
             })
           }
-          data={[
-            { value: "school", label: "School" },
-            { value: "home", label: "Home" },
-            { value: "sports", label: "Sports" },
-          ]}
+          data={
+            tags &&
+            tags.map((tag) => ({
+              value: tag,
+              label: tag,
+            }))
+          }
         />
         {!isMobile && (
           <Button color="blue" size="sm" onClick={handleSave}>

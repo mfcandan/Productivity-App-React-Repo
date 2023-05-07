@@ -1,5 +1,6 @@
 import { Button, Flex, Modal, TextInput } from "@mantine/core";
 import { useState } from "react";
+import useTodoStore from "../../store/store";
 
 interface INewTagModal {
   isOpen: boolean;
@@ -7,10 +8,12 @@ interface INewTagModal {
 }
 
 const NewTagModal = ({ isOpen, onClose }: INewTagModal) => {
+  const { createTag } = useTodoStore((state) => state);
   const [newTag, setNewTag] = useState("");
 
   const handleAdd = () => {
-    console.log("added");
+    createTag(newTag);
+    setNewTag("");
     onClose();
   };
 

@@ -4,8 +4,26 @@ import useTodoStore, { ITodoItem } from "../../store/store";
 import { useEffect, useState } from "react";
 
 export function TodoList() {
-  const { todos, searchText } = useTodoStore((state) => state);
+  const { todos, tags, searchText, selectedTag, setSelectedTag } = useTodoStore(
+    (state) => state
+  );
   const [filteredTodos, setFilteredTodos] = useState<ITodoItem[]>(todos);
+
+  useEffect(() => {
+    setFilteredTodos(todos);
+    setSelectedTag("all");
+  }, [todos, tags]);
+
+  useEffect(() => {
+    if (selectedTag === "all") {
+      setFilteredTodos(todos);
+    } else {
+      const tempFilteredTodos = todos.filter((item: ITodoItem) => {
+        return item.tag === selectedTag;
+      });
+      setFilteredTodos(tempFilteredTodos);
+    }
+  }, [selectedTag]);
 
   useEffect(() => {
     const tempFilteredTodos = todos.filter((item: ITodoItem) => {

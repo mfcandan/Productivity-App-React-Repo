@@ -14,12 +14,16 @@ export interface ITodoItem {
 
 type State = {
   todos: ITodoItem[];
+  tags: string[];
+  selectedTag?: string;
   user: User | null;
   searchText: string;
   addTodo: (todo: ITodoItem) => void;
   deleteTodo: (todoID: number) => void;
   updateTodo: (todoID: number, updatedTodo: ITodoItem) => void;
   toggleTodo: (todoID: number) => void;
+  setSelectedTag: (tag: string) => void;
+  createTag: (tag: string) => void;
   setUser: (user: User) => void;
   logout: () => void;
   setSearchText: (searchText: string) => void;
@@ -31,6 +35,8 @@ const useTodoStore = create<State>((set) => ({
     { id: 2, task: "Sightseeing", tag: "school", image: "", checked: false },
     { id: 4, task: "Snow", tag: "home", image: "", checked: false },
   ],
+  tags: ["all", "sports", "school", "home"],
+  selectedTag: "all",
   user: null,
   searchText: "",
   addTodo: (todo: ITodoItem) =>
@@ -58,6 +64,11 @@ const useTodoStore = create<State>((set) => ({
         }
         return todo;
       }),
+    })),
+  setSelectedTag: (tag: string) => set(() => ({ selectedTag: tag })),
+  createTag: (tag: string) =>
+    set((state) => ({
+      tags: [...state.tags, tag],
     })),
   setUser: (user: User) => set(() => ({ user })),
   setSearchText: (searchText: string) => set(() => ({ searchText })),
