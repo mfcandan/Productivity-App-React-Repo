@@ -7,9 +7,7 @@
 ## Projeyi klonladıktan sonra kurmak için:
 
 ### `npm install`
-
-eğer çalışmazsa
-
+yada
 ### `npm install --legacy-peer-deps`
 
 Kurduktan sonra çalışıtırmak için:
@@ -30,4 +28,5 @@ email: demo@gmail.com
 password: 123456
 
 ### `Screen shot:`
+![Screenshot](/screenshots/1.png)
 ![Screenshot](/screenshots/2.png)
